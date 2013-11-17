@@ -30,12 +30,17 @@
             %>
         }]
       });
+
+      $('.closeChart').on('click', function() {
+        $('#highChartContainer').toggle();
+      });
     });
   </script>
 <% end %>
 
 <h2> Products in the market </h2>
 
+<a href="#" class="closeChart">Chart</a>
 <div id="highChartContainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
 <table>

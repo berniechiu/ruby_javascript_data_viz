@@ -34,6 +34,28 @@
       $('.closeChart').on('click', function() {
         $('#highChartContainer').toggle();
       });
+
+      $('[data-incr-price]').on('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        price = $(this).attr('data-price');
+        newPrice = parseInt(price) + 1;
+        url = $(this).attr('href');
+
+        console.log(location.protocol + "//" + location.host + url);
+
+        $.ajax({
+          url: url,
+          type: 'put',
+          dataType: 'json',
+          data: {
+            product: { price: newPrice }
+          }
+        }).success(function(data, textStatus, jqXHR) {
+          $('[data-product='+ data.id +']').html("$" + data.price);
+          $('[data-incr-price='+ data.id +']').attr('data-price', data.price);
+        });
+      })
     });
   </script>
 <% end %>
@@ -56,8 +78,12 @@
       <tr>
         <td><%= product.id %></td>
       	<td><%= product.name %></td>
-      	<td>$<%= product.price %></td>
+      	<td data-product='<%= product.id %>'>$<%= product.price %></td>
       	<td><%= product.user.name if product.user.present? %></td>
+        <td><%= link_to "+", product_path(product),
+                'data-price'      => product.price,
+                'data-incr-price' => product.id,  
+                :method           => :put %></td>
       </tr>
     <% end %>
   </tbody>
